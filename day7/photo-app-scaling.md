@@ -26,7 +26,7 @@ DAU = Registered users × Daily active percentage
 
 DAU = 10,000,000 × 0.10
 
-**DAU = 1,000,000 users**
+DAU = 1,000,000 users
 
 Therefore, SnapShare has an estimated one million daily active users.
 
@@ -44,7 +44,7 @@ Average uploads per second = Daily uploads ÷ Seconds per day
 
 = 1,000,000 ÷ 86,400
 
-**Average uploads ≈ 11.6 photos per second**
+Average uploads ≈ 11.6 photos per second
 
 The system must support approximately 12 photo uploads per second on average, with additional capacity for traffic spikes.
 
@@ -58,13 +58,13 @@ Daily feed views = 50,000,000 feed views
 
 Average feed views per second = 50,000,000 ÷ 86,400
 
-**Average feed views ≈ 579 per second**
+Average feed views ≈ 579 per second
 
 Peak feed views per second are estimated using a factor of five:
 
 Peak feed views = 579 × 5
 
-**Peak feed views ≈ 2,895 per second**
+Peak feed views ≈ 2,895 per second
 
 The application should therefore be designed to handle approximately 2,900 feed views per second during peak periods.
 
@@ -76,27 +76,28 @@ Annual uploads = 1,000,000 × 365
 
 Annual uploads = 365,000,000 photos
 
-**Original photo storage**
+Original photo storage
 
 365,000,000 × 2 MB = 730,000,000 MB
 
-Using decimal units, this equals **730 TB per year**.
+Using decimal units, this equals 730 TB per year.
 
-**Thumbnail storage**
+Thumbnail storage
 
 365,000,000 × 50 KB = 18,250,000,000 KB
 
-Using decimal units, this equals **18.25 TB per year**.
+Using decimal units, this equals 18.25 TB per year.
 
-**Total annual photo storage**
+Total annual photo storage
 
-730 TB + 18.25 TB = **748.25 TB per year**
+730 TB + 18.25 TB = 748.25 TB per year
+This represents approximately 748.25 TB of additional storage for each year of uploads. After three years, the application would require approximately 2.245 PB for originals and thumbnails alone, assuming the same upload rate and no deletions.
 
 This estimate excludes backups, database records, replicas, and storage overhead. Actual storage requirements may be higher.
 
 ## 3. Is SnapShare Read-Heavy or Write-Heavy?
 
-SnapShare is primarily a **read-heavy system**.
+SnapShare is primarily a read-heavy system.
 
 The application receives approximately 50 million feed views per day but only one million photo uploads per day. This produces about 50 feed views for every photo upload.
 
@@ -189,23 +190,23 @@ The diagram shows the main request-serving architecture and the asynchronous thu
 
 ## 6. What Each Component Does
 
-1. **CDN:** Delivers cached images and thumbnails from locations close to users, reducing latency and traffic to the application servers.
+1. CDN: Delivers cached images and thumbnails from locations close to users, reducing latency and traffic to the application servers.
 
-2. **Load balancer:** Distributes incoming requests across available app servers to prevent one server from becoming overloaded.
+2. Load balancer: Distributes incoming requests across available app servers to prevent one server from becoming overloaded.
 
-3. **App servers:** Handle application logic, authenticate users, process uploads, and coordinate feed requests.
+3. App servers: Handle application logic, authenticate users, process uploads, and coordinate feed requests.
 
-4. **Redis cache:** Stores frequently accessed feed data and metadata to reduce repeated database queries and improve response times.
+4. Redis cache: Stores frequently accessed feed data and metadata to reduce repeated database queries and improve response times.
 
-5. **Primary database:** Stores authoritative application data, including users, photo metadata, captions, and follow relationships.
+5. Primary database: Stores authoritative application data, including users, photo metadata, captions, and follow relationships.
 
-6. **Database read replica:** Handles eligible read queries so that the primary database can focus on writes and important transactions.
+6. Database read replica: Handles eligible read queries so that the primary database can focus on writes and important transactions.
 
-7. **Object storage:** Stores original photos and generated thumbnails independently of the relational database.
+7. Object storage: Stores original photos and generated thumbnails independently of the relational database.
 
-8. **Message queue:** Holds thumbnail-generation jobs until workers are ready to process them, allowing uploads to complete without waiting for thumbnail generation.
+8. Message queue: Holds thumbnail-generation jobs until workers are ready to process them, allowing uploads to complete without waiting for thumbnail generation.
 
-9. **Thumbnail worker:** Processes queued jobs, generates smaller image versions, and saves the thumbnails to object storage.
+9. Thumbnail worker: Processes queued jobs, generates smaller image versions, and saves the thumbnails to object storage.
 
 ## 7. Photo Upload Flow
 
